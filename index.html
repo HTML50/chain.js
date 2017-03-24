@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>chain.js</title>
+</head>
+<body>
+
+<script src="chain.js"></script>
+<script>
+var alert= console.log;
+
+
+function A(){
+alert('第一个函数');
+}
+
+function B(){
+alert('第二个函数');
+}
+
+//C函数是个异步函数
+function C(){
+    setTimeout(function(){
+        alert('第三个函数，延迟3秒执行');
+    },3000)
+}
+
+function D(){
+alert('第四个函数');
+}
+
+
+
+var job=chain(A,B,C,D)  
+start();
+
+
+
+</script>
+</body>
+</html>
