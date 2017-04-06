@@ -1,0 +1,61 @@
+<docutype html>
+<html>
+<head>
+<meta charset="utf8">
+<body>
+<div id="output"></div>
+
+<script>
+function B(){
+    setTimeout(function(){
+      output.innerText+='第二个函数，延迟2秒执行\n';
+    },2000);
+}
+
+//length 74
+var str = 'setTimeout(function(){\
+      output.innerText+=\'()第二(个函数)，延迟2秒执行\n\';\
+    },2000);'
+    
+
+    
+function match(str,item){
+var counter=0,pos=-1,
+	matchLeft = item.charAt(0),
+	matchRight = item.charAt(1),
+	start = str.indexOf(matchLeft)+1;
+	search(start);
+	
+	function search(position){
+	pos=str.indexOf(matchRight,position);
+	if(pos!=-1){
+		counter++;
+		var subStr = str.substring(start,pos).match(eval("/\\"+matchLeft+"/g"));
+		if(subStr!==null){
+		var numsOfMatchLeft = subStr.length;
+		}else if(subStr===null){
+		return;
+		}
+		
+		if(counter==numsOfMatchLeft){	
+		arguments.callee(pos+1);
+		}
+		else{
+		return;
+		}
+	}else{
+	console.warn('输入的配对符号有误');
+	}
+}
+ 
+ return pos;
+}
+
+
+console.log(match(str,'()'));
+//console.log(str.substring(0,30).match(/\)/g).length);
+//console.log(str.lastIndexOf(')'));
+
+</script>
+</body>
+</html>

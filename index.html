@@ -10,31 +10,33 @@
 
 function A(){
     setTimeout(function(){
-        output.innerText+='第一个函数，延迟1秒执行\n';
+        output.innerText+='第一个异步函数，延迟1秒执行\n';
     },1000);
 }
 
 function B(){
-    setTimeout(function(){
-        output.innerText+='第二个函数，延迟2秒执行\n';
-    },2000);
+output.innerText+='第二个普通函数，无延迟，立即执行\n';
 }
 
 //C函数是个异步函数
 function C(){
     setTimeout(function(){
-        output.innerText+='第三个函数，延迟3秒执行\n';
-    },3000);
+        output.innerText+='第三个异步函数，延迟1秒执行\n';
+    },1000);
 }
 
 function D(){
-output.innerText+='第四个函数\n';
+output.innerText+='第四个普通函数，无延迟，立即执行\n';
+}
+
+function E(){
+    setTimeout(function(){
+        output.innerText+='第五个异步函数，延迟2秒执行\n';
+    },2000);
 }
 
 
-
-
-var job=new Chain(A,B,C,D);
+var job=new Chain(A,B,C,D,E);
 job.start();
 
 
@@ -49,9 +51,18 @@ function Chain(){
   for(i=0;i<this.length;i++){
     this.taskList.push(arguments[i]);
   }
-   
+  
+  this.setTimeout = function(fn,time){
+  var _this =this;
+   setTimeout(function(){
+		eval(fn);
+	   _this.taskList.shift();
+	   _this.next(); 
+	},time);
+  }
+  
   this.next = function(){
-  if(this.taskList.length>=0) this.inject(this.taskList[0]);
+  if(this.taskList.length>0) this.inject(this.taskList[0]);
   else output.innerText+='任务全部完成';
   }
   this.start = function(){
@@ -66,21 +77,24 @@ function Chain(){
 	if(source.indexOf('setTime')!=-1) {
 		var pos2 = match(source,'()'),
 		pos1= source.lastIndexOf(',',pos2), 
-		originalTime = source.substring(pos1+1,pos2);
-		source.replace('setTimeout','this.setTimeout');
+		originalTime = source.substring(pos1+1,pos2),
+		originalFn='('+source.substring(source.indexOf('setTimeout(')+11,pos1)+')();';
+		this.successList.push(fn.name);
+		this.setTimeout(originalFn,originalTime);
     }
     else if(source.indexOf('ajax')!=-1){
       
     }
 	else{
 	source += "this.taskList.shift();this.next();this.successList.push(fn.name)";
-	}
 	try{
-      eval(source);
-    }
-    catch(err){
-      this.errorList.push(fn.name);
-    }
+		  eval(source);
+		}
+		catch(err){
+		  console.warn(err)
+		  this.errorList.push(fn.name);
+		}
+	}
   }
    output.innerText+='链表初始化:'+this.taskList.length+'个任务\n';
 }
@@ -94,7 +108,6 @@ var counter=0,pos=-1,
 	matchLeft = item.charAt(0),
 	matchRight = item.charAt(1),
 	start = str.indexOf('setTimeout(')+11;
-	console.log(start)
 	search(start);
 	
 	function search(position){
