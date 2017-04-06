@@ -34,8 +34,8 @@ var _setTimeout = setTimeout,
         
     }
 
-//´Ë´¦µÄfnÎªÍ¬²½º¯Êı
-//Èç¹ûÎªsetTimeout/ajaxµÈ£¬ÔòÎŞĞè
+//æ­¤å¤„çš„fnä¸ºåŒæ­¥å‡½æ•°
+//å¦‚æœä¸ºsetTimeout/ajaxç­‰ï¼Œåˆ™æ— éœ€
 function task(fn){
   var source = fn.toString(),
       startPos = source.indexOf('{') + 2,

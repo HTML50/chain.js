@@ -5,37 +5,122 @@
 <title>chain.js</title>
 </head>
 <body>
-
-<script src="chain.js"></script>
+<div id="output"></div>
 <script>
-var alert= console.log;
-
 
 function A(){
-alert('第一个函数');
+    setTimeout(function(){
+        output.innerText+='第一个函数，延迟1秒执行\n';
+    },1000);
 }
 
 function B(){
-alert('第二个函数');
+    setTimeout(function(){
+        output.innerText+='第二个函数，延迟2秒执行\n';
+    },2000);
 }
 
 //C函数是个异步函数
 function C(){
     setTimeout(function(){
-        alert('第三个函数，延迟3秒执行');
-    },3000)
+        output.innerText+='第三个函数，延迟3秒执行\n';
+    },3000);
 }
 
 function D(){
-alert('第四个函数');
+output.innerText+='第四个函数\n';
 }
 
 
 
-var job=chain(A,B,C,D)  
-start();
+
+var job=new Chain(A,B,C,D);
+job.start();
 
 
+
+  
+function Chain(){
+  this.taskList=[],
+  this.errorList=[],
+  this.successList=[];
+  this.length = arguments.length;
+  
+  for(i=0;i<this.length;i++){
+    this.taskList.push(arguments[i]);
+  }
+   
+  this.next = function(){
+  if(this.taskList.length>=0) this.inject(this.taskList[0]);
+  else output.innerText+='任务全部完成';
+  }
+  this.start = function(){
+  this.next();
+  }
+  
+  this.inject = function(fn){
+    var source = fn.toString(),
+    startPos = source.indexOf('{') + 2,
+    endPos = source.lastIndexOf('}') -1;
+    source = source.substring(startPos,endPos); 
+	if(source.indexOf('setTime')!=-1) {
+		var pos2 = match(source,'()'),
+		pos1= source.lastIndexOf(',',pos2), 
+		originalTime = source.substring(pos1+1,pos2);
+		source.replace('setTimeout','this.setTimeout');
+    }
+    else if(source.indexOf('ajax')!=-1){
+      
+    }
+	else{
+	source += "this.taskList.shift();this.next();this.successList.push(fn.name)";
+	}
+	try{
+      eval(source);
+    }
+    catch(err){
+      this.errorList.push(fn.name);
+    }
+  }
+   output.innerText+='链表初始化:'+this.taskList.length+'个任务\n';
+}
+
+    
+
+
+
+function match(str,item){
+var counter=0,pos=-1,
+	matchLeft = item.charAt(0),
+	matchRight = item.charAt(1),
+	start = str.indexOf('setTimeout(')+11;
+	console.log(start)
+	search(start);
+	
+	function search(position){
+	pos=str.indexOf(matchRight,position);
+	if(pos!=-1){
+		counter++;
+		var subStr = str.substring(start,pos).match(eval("/\\"+matchLeft+"/g"));
+		if(subStr!==null){
+		var numsOfMatchLeft = subStr.length;
+		}else if(subStr===null){
+		return;
+		}
+		
+		if(counter==numsOfMatchLeft){	
+		arguments.callee(pos+1);
+		}
+		else{
+		return;
+		}
+	}else{
+	console.warn('输入的配对符号有误');
+	}
+}
+ 
+ return pos;
+}
 
 </script>
 </body>
