@@ -1,3 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>chain.js</title>
+</head>
+<body>
+<div id="output"></div>
+<script>
+
+
+var job = new Chain(A, B, C, function a(){
+	D('函数传参');
+}, E, F);
+job.start();
+
+
+
+
+
+
+
+function A() {
+	setTimeout("output.innerText += '第一个异步函数，延迟1秒执行\\n'", 1000);
+}
+
+function B() {
+	output.innerText += '第二个普通函数，无延迟，立即执行\n';
+}
+
+//C函数是个异步函数
+
+function C() {
+	setTimeout(function() {
+		output.innerText += '第三个异步函数，延迟1秒执行\n';
+	}, 1000);
+}
+
+function D(text) {
+	output.innerText += '第四个普通函数，自定义文字：' + text + '，无延迟，立即执行\n';
+}
+
+function E() {
+	ajax({
+		url: "test2.html",
+    beforeSend:function(){
+			output.innerText += '第五个异步ajax函数，读取本页源码\n';
+		},
+		success: function(){
+			output.innerText += '读取完成，执行下一个函数\n';
+		}
+	})
+}
+
+function F() {
+	setTimeout(function() {
+		output.innerText += '第六个异步函数，延迟1秒执行\n';
+	}, 1000);
+}
+
 function Chain() {
 	this.taskList = [], 
   this.errorList = [], 
@@ -121,6 +181,10 @@ function Chain() {
 	output.innerText += '链表初始化:' + this.taskList.length + '个任务\n';
 }
 
+
+
+
+
 function match(str, startStr, item) {
 	var counter = 0,
 		end = -1,
@@ -152,3 +216,7 @@ function match(str, startStr, item) {
 
 	return [start, end];
 }
+
+</script>
+</body>
+</html>
