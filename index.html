@@ -1,27 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset=utf-8" />
+<meta charset="utf-8"/>
 <title>chain.js</title>
+<style>
+img{
+width:300px;
+height:388px;
+padding:10px;
+filter:blur(6px);
+transition:filter 0.3s;
+}
 
-</head>
-<body>
+list{
+display:block;
+margin-top:100px;
+text-align:center;
+}
 
+#loading{
+opacity:0;
+transition:opacity 1s;
+}
 
-
-
-<script>
-
-function begin(){
-
+#loading:after{
+content:'.';
+animation: loading;
 }
 
 
-function 
+</style>
+</head>
+<body>
+<input type="button" value="读取图片" onclick="begin()">
+<spinner id="loading">读取中</spinner>
+<list>
+<img src="1_preview.jpg">
+<img src="2_preview.jpg">
+<img src="3_preview.jpg">
+<img src="4_preview.jpg">
+</list>
 
+<script>
+
+var toBeDownloaded=["1.jpg","2.jpg","3.jpg","4.jpg"];
+var job;
+
+
+
+function begin(){
+job=new Chain();
+loading.opacity=1;
+for(i=0;i<toBeDownloaded.length;i++){
+job.add(function(k){
+  return function(){
+    ajax({
+    url:toBeDownloaded[k],
+    success:setIMG(k,toBeDownloaded[k])
+    });
+    }
+}(i));
+}
+job.add(finished)
+job.start();
+}
+
+function setIMG(index,src){
+var imgs = document.getElementsByTagName('img');
+imgs[index].src=src;
+imgs[index].style.filter='blur(0px)';
+}
+
+function finished(){
+loading.innerText = '读取完毕';
+setTimeout('loading.style.opacity=0',1000);
+}
 
 
 </script>
-<script src='chain.js'></script>
+<script src="chain.js"></script>
 </body>
 </html>

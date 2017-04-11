@@ -3,14 +3,21 @@ function Chain() {
   this.errorList = [], 
   this.successList = [],
   this.length = arguments.length;
-
 	for (i = 0; i < this.length; i++) {
 		this.taskList.push(arguments[i]);
 	}
 
+  this.add=function(){
+    if(typeof(arguments[0])== Number){
+      this.taskList.splice(arguments[0],0,arguments[1]);
+    }
+    else{
+      this.taskList.push(arguments[0]);
+    }
+  }
 	this.next = function() {
 		if (this.taskList.length > 0) this.inject(this.taskList[0]);
-		else output.innerText += '任务全部完成';
+		else console.log('任务全部完成');
 	}
 
 	this.start = function() {
@@ -106,10 +113,11 @@ function Chain() {
 		} else if (source.indexOf('ajax') != -1) {
 			var pos = match(source, 'ajax(', '{}'),
 			param = source.substring(pos[0], pos[1] + 1);
+              console.log(param)
       this.ajax(eval('obj='+param));
       this.successList.push(fn.name);
 		} else {
-			source += "this.taskList.shift();this.successList.push(fn.name);this.next();";
+			source += ";this.taskList.shift();this.successList.push(fn.name);this.next();";
 			try {
 				eval(source);
 			} catch (err) {
@@ -118,7 +126,7 @@ function Chain() {
 			}
 		}
 	}
-	output.innerText += '链表初始化:' + this.taskList.length + '个任务\n';
+	console.log('链表初始化:' + this.taskList.length + '个任务\n');
 }
 
 function match(str, startStr, item) {
