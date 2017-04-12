@@ -113,7 +113,6 @@ function Chain() {
 		} else if (source.indexOf('ajax') != -1) {
 			var pos = match(source, 'ajax(', '{}'),
 			param = source.substring(pos[0], pos[1] + 1);
-              console.log(param)
       this.ajax(eval('obj='+param));
       this.successList.push(fn.name);
 		} else {

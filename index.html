@@ -9,7 +9,7 @@ width:300px;
 height:388px;
 padding:10px;
 filter:blur(6px);
-transition:filter 0.3s;
+transition:filter 1s;
 }
 
 list{
@@ -20,20 +20,31 @@ text-align:center;
 
 #loading{
 opacity:0;
-transition:opacity 1s;
+transition:opacity .5s;
+font-size:30px;
 }
 
 #loading:after{
 content:'.';
-animation: loading;
+animation: blinking 2s linear infinite;
+}
+
+@keyframes blinking {
+	50% {
+		content: '..';
+	}
+
+	100% {
+		content: '...';
+	}
 }
 
 
 </style>
 </head>
 <body>
-<input type="button" value="读取图片" onclick="begin()">
-<spinner id="loading">读取中</spinner>
+<center><input type="button" value="读取图片" onclick="begin()">
+<p id="loading">读取中</p></center>
 <list>
 <img src="1_preview.jpg">
 <img src="2_preview.jpg">
@@ -50,29 +61,28 @@ var job;
 
 function begin(){
 job=new Chain();
-loading.opacity=1;
+loading.style.opacity=1;
 for(i=0;i<toBeDownloaded.length;i++){
 job.add(function(k){
-  return function(){
-    ajax({
-    url:toBeDownloaded[k],
-    success:setIMG(k,toBeDownloaded[k])
-    });
-    }
+  return new Function('ajax({\
+    url:toBeDownloaded['+k+'],\
+    success:setIMG('+k+',toBeDownloaded['+k+'])\
+    });')
 }(i));
 }
+job.add(function(){loading.innerText = '读取完毕';})
 job.add(finished)
 job.start();
 }
 
 function setIMG(index,src){
 var imgs = document.getElementsByTagName('img');
+loading.innerText = '读取第'+(index+1)+'张图片';
 imgs[index].src=src;
 imgs[index].style.filter='blur(0px)';
 }
 
 function finished(){
-loading.innerText = '读取完毕';
 setTimeout('loading.style.opacity=0',1000);
 }
 
