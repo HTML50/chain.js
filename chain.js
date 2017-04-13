@@ -7,7 +7,7 @@ function Chain() {
 		this.taskList.push(arguments[i]);
 	}
 
-  this.add=function(){
+  this.add = function(){
     if(typeof(arguments[0])== Number){
       this.taskList.splice(arguments[0],0,arguments[1]);
     }
@@ -21,6 +21,7 @@ function Chain() {
 	}
 
 	this.start = function() {
+    console.log('开始执行。总共' + this.taskList.length + '个任务\n');
 		this.next();
 	}
 
@@ -125,7 +126,7 @@ function Chain() {
 			}
 		}
 	}
-	console.log('链表初始化:' + this.taskList.length + '个任务\n');
+	console.log('链表初始化完毕');
 }
 
 function match(str, startStr, item) {
