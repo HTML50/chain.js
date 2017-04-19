@@ -50,11 +50,11 @@ function Chain() {
 			function() {},
 			success: arguments[0].success ||
 			function(response) {
-				//console.log(response);
+				console.log('ajax success');
 			},
 			error: arguments[0].error ||
 			function() {
-				console.log("error");
+				console.log("ajax error");
 			}
 		}
 		ajaxData.beforeSend();
@@ -66,7 +66,7 @@ function Chain() {
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
 				if (xhr.status == 200 || xhr.status == 304) {
-					ajaxData.success(xhr.response);
+          ajaxData.success(xhr.response);
 					_this.taskList.shift();
           _this.next();
 				} else {
