@@ -4,22 +4,25 @@
 <meta charset="utf-8"/>
 <title>chain.js</title>
 <style>
-img{
-width:300px;
-height:388px;
-padding:5px;
--webkit-filter:blur(6px);
-filter:blur(6px);
-transition:-webkit-filter 1.5s;
-transition:filter 1.5s;
-}
+html,body{height:100%;text-align: center;}
 
 list{
-display:block;
-margin-top:50px;
-text-align:center;
+margin-top:30px;
 }
-
+li{
+display: inline-block;
+width: 22%;
+margin: 1%;
+height: 60%;
+}
+img{
+width: 100%;
+height: 100%;
+filter:blur(6px);
+-webkit-filter:blur(6px);
+transition:filter 1.5s;
+transition:-webkit-filter 1.5s;
+}
 #loading{
 opacity:0;
 transition:opacity .5s;
@@ -45,13 +48,13 @@ animation: blinking 2s linear infinite;
 </style>
 </head>
 <body>
-<center><input type="button" value="读取图片" onclick="begin()">
-<p id="loading">读取第1张图片</p></center>
+<input type="button" value="读取图片" onclick="begin()">
+<p id="loading">读取第1张图片</p>
 <list>
-<img src="img/1_preview.jpg">
-<img src="img/2_preview.jpg">
-<img src="img/3_preview.jpg">
-<img src="img/4_preview.jpg">
+<li><img src="img/1_preview.jpg"></li>
+<li><img src="img/2_preview.jpg"></li>
+<li><img src="img/3_preview.jpg"></li>
+<li><img src="img/4_preview.jpg"></li>
 </list>
 
 <script>
